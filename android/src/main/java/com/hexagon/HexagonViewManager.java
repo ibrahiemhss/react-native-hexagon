@@ -8,35 +8,24 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.VectorDrawable;
-import android.graphics.drawable.shapes.PathShape;
-import android.graphics.drawable.shapes.Shape;
-import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.facebook.react.uimanager.annotations.ReactPropGroup;
-import com.facebook.react.views.image.ReactImageView;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.LinearLayout;
 
+
+import androidx.annotation.NonNull;
 
 import java.net.URL;
 public class HexagonViewManager extends SimpleViewManager<EffectiveShapeView> {
   public static final String REACT_CLASS = "HexagonView";
   private ImgStartListener imgStartListener;
   private  int cornerRadius=0;
+  private  int size=0;
   private String borderColor;
  private int borderWidth=0;
   private interface ImgStartListener {
@@ -87,6 +76,9 @@ public class HexagonViewManager extends SimpleViewManager<EffectiveShapeView> {
         reactImageView.setBorderWidth(borderWidth);
         reactImageView.setBorderColor(Color.parseColor(borderColor));
         reactImageView.drawShape(cornerRadius);
+        reactImageView.getLayoutParams().height = size;
+        reactImageView.getLayoutParams().width = size;
+        reactImageView.requestLayout();
         reactImageView.setRotation(30);
       }
     });
@@ -109,11 +101,17 @@ public class HexagonViewManager extends SimpleViewManager<EffectiveShapeView> {
   public void setSrc(EffectiveShapeView view, String uri) {
     imgStartListener.startLoading(uri);
   }
+
+  @ReactProp(name = "size")
+  public void setSize(EffectiveShapeView view, int _size) {
+    size=_size;
+  }
   @ReactProp(name = "cornerRadius")
   public void setCornerRadius(EffectiveShapeView view, int _cornerRadius) {
     cornerRadius=_cornerRadius;
 
   }
+
   @ReactProp(name = "borderWidth")
   public void seBorderWidth(EffectiveShapeView view, int _borderWidth) {
     borderWidth= _borderWidth;
