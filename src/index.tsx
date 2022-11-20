@@ -12,7 +12,10 @@ const LINKING_ERROR =
   '- You are not using Expo Go\n';
 
 type HexagonProps = {
-  color: string;
+  src: string;
+  borderColor: string;
+  borderWidth: number;
+  cornerRadius: number;
   style: ViewStyle;
 };
 

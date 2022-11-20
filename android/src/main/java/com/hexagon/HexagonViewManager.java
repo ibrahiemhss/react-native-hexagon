@@ -1,16 +1,47 @@
 package com.hexagon;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.VectorDrawable;
+import android.graphics.drawable.shapes.PathShape;
+import android.graphics.drawable.shapes.Shape;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import com.facebook.react.uimanager.annotations.ReactPropGroup;
+import com.facebook.react.views.image.ReactImageView;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.util.Log;
 
-public class HexagonViewManager extends SimpleViewManager<View> {
+
+import java.net.URL;
+public class HexagonViewManager extends SimpleViewManager<EffectiveShapeView> {
   public static final String REACT_CLASS = "HexagonView";
+  private ImgStartListener imgStartListener;
+  private  int cornerRadius=0;
+  private String borderColor;
+ private int borderWidth=0;
+  private interface ImgStartListener {
+    void startLoading(String imgUrl);
+  }
 
   @Override
   @NonNull
@@ -20,12 +51,76 @@ public class HexagonViewManager extends SimpleViewManager<View> {
 
   @Override
   @NonNull
-  public View createViewInstance(ThemedReactContext reactContext) {
-    return new View(reactContext);
+  public EffectiveShapeView createViewInstance(ThemedReactContext reactContext) {
+    final EffectiveShapeView reactImageView = new EffectiveShapeView(reactContext);
+    final Handler handler = new Handler();
+    imgStartListener = new ImgStartListener() {
+      @Override
+      public void startLoading(final String imgUrl) {
+        startDownloading(imgUrl, handler, reactImageView);
+
+      }
+    };
+
+    return reactImageView;
+  }
+  private void startDownloading(final String imgUrl, final Handler handler, final EffectiveShapeView reactImageView) {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          URL url = new URL(imgUrl);
+          final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+          setImage(bmp, handler, reactImageView);
+        } catch (Exception e) {
+          Log.e("ReactImageManager", "Error : " + e.getMessage());
+        }
+      }
+    }).start();
+  }
+  private void setImage(final Bitmap bmp, Handler handler, final EffectiveShapeView reactImageView) {
+    handler.post(new Runnable() {
+      @Override
+      public void run() {
+
+        reactImageView.setImageBitmap(bmp);
+        reactImageView.setBorderWidth(borderWidth);
+        reactImageView.setBorderColor(Color.parseColor(borderColor));
+        reactImageView.drawShape(cornerRadius);
+        reactImageView.setRotation(30);
+      }
+    });
   }
 
-  @ReactProp(name = "color")
-  public void setColor(View view, String color) {
-    view.setBackgroundColor(Color.parseColor(color));
+
+  public static Bitmap drawableToBitmap (Drawable drawable) {
+    if (drawable instanceof BitmapDrawable) {
+      return ((BitmapDrawable)drawable).getBitmap();
+    }
+
+    Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bitmap);
+    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+    drawable.draw(canvas);
+
+    return bitmap;
   }
+  @ReactProp(name = "src")
+  public void setSrc(EffectiveShapeView view, String uri) {
+    imgStartListener.startLoading(uri);
+  }
+  @ReactProp(name = "cornerRadius")
+  public void setCornerRadius(EffectiveShapeView view, int _cornerRadius) {
+    cornerRadius=_cornerRadius;
+
+  }
+  @ReactProp(name = "borderWidth")
+  public void seBorderWidth(EffectiveShapeView view, int _borderWidth) {
+    borderWidth= _borderWidth;
+  }
+  @ReactProp(name = "borderColor")
+  public void setBorderColor(EffectiveShapeView view, String _borderColor) {
+    borderColor=_borderColor;
+  }
+
 }

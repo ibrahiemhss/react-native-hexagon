@@ -6,7 +6,13 @@ import { HexagonView } from 'react-native-hexagon';
 export default function App() {
   return (
     <View style={styles.container}>
-      <HexagonView color="#32a852" style={styles.box} />
+      <HexagonView
+        src="https://picsum.photos/200/300.jpg"
+        borderColor="#32a852"
+        borderWidth={3}
+        cornerRadius={5}
+        style={styles.box}
+      />
     </View>
   );
 }
@@ -18,8 +24,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   box: {
-    width: 60,
-    height: 60,
+    width: 24,
+    height: 24,
     marginVertical: 20,
   },
 });

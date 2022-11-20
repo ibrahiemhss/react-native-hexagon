@@ -126,6 +126,7 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
+  implementation 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
 // From node_modules
 }
 
