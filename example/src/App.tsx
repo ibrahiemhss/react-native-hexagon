@@ -9,8 +9,8 @@ export default function App() {
       <HexagonView
         src="https://picsum.photos/200/300.jpg"
         borderColor="#32a852"
-        borderWidth={3}
-        cornerRadius={5}
+        borderWidth={4}
+        cornerRadius={7}
         style={styles.box}
       />
     </View>
