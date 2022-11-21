@@ -2,10 +2,6 @@ package com.hexagon;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import com.facebook.react.uimanager.SimpleViewManager;
@@ -15,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.LinearLayout;
 
 
 import androidx.annotation.NonNull;
@@ -76,10 +71,6 @@ public class HexagonViewManager extends SimpleViewManager<EffectiveShapeView> {
         reactImageView.setBorderWidth(borderWidth);
         reactImageView.setBorderColor(Color.parseColor(borderColor));
         reactImageView.drawShape(cornerRadius);
-        reactImageView.getLayoutParams().height = size;
-        reactImageView.getLayoutParams().width = size;
-        reactImageView.requestLayout();
-        reactImageView.setRotation(30);
       }
     });
   }
@@ -114,6 +105,10 @@ public class HexagonViewManager extends SimpleViewManager<EffectiveShapeView> {
 
   @ReactProp(name = "borderWidth")
   public void seBorderWidth(EffectiveShapeView view, int _borderWidth) {
+    if(view !=null){
+      view.setBorderWidth(borderWidth);
+    }
+
     borderWidth= _borderWidth;
   }
   @ReactProp(name = "borderColor")

@@ -39,11 +39,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
-import androidx.annotation.FloatRange;
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
 
 public class EffectiveShapeView extends androidx.appcompat.widget.AppCompatImageView {
   private final RectF tempCornerArcBounds = new RectF();
@@ -140,13 +136,16 @@ public class EffectiveShapeView extends androidx.appcompat.widget.AppCompatImage
                     mMaskPaint.setColor(mBorderColor);
                     mMaskPaint.setStrokeWidth(mBorderWidth);
                     canvas.drawPath(mMaskPath, mMaskPaint);
+
                 }
 
                 if (mDecorationsView != null) {
-                    Bitmap bitmap = ((BitmapDrawable) mDecorationsView).getBitmap();
-                    int width = mDecorationsView.getIntrinsicWidth();
+                  Bitmap bitmap = rotateDrawable(((BitmapDrawable) mDecorationsView).getBitmap());
+
+                  int width = mDecorationsView.getIntrinsicWidth();
                     int height = mDecorationsView.getIntrinsicHeight();
-                    switch (mDirection) {
+                    canvas.rotate(30);
+                  switch (mDirection) {
                         case Direction.LEFT_TOP:
                             canvas.drawBitmap(bitmap, mPadding, mPadding, mShaderPaint);
                             break;
@@ -163,13 +162,24 @@ public class EffectiveShapeView extends androidx.appcompat.widget.AppCompatImage
                                     getHeight() - height - mPadding,mShaderPaint);
                             break;
                     }
+
+
+
                 }
+
             }
         } else {
             super.onDraw(canvas);
         }
     }
-
+  private Bitmap rotateDrawable(Bitmap bmpOriginal) {
+    Bitmap bmpResult = Bitmap.createBitmap(bmpOriginal.getHeight(), bmpOriginal.getWidth(), Bitmap.Config.ARGB_8888);
+    Canvas tempCanvas = new Canvas(bmpResult);
+    int pivot = bmpOriginal.getHeight() / 2;
+    tempCanvas.rotate(90, pivot, pivot);
+    tempCanvas.drawBitmap(bmpOriginal, 0, 0, null);
+    return bmpResult;
+  }
     private void createShader() {
         Drawable drawable = getDrawable();
         if (drawable != null) {
@@ -219,6 +229,11 @@ public class EffectiveShapeView extends androidx.appcompat.widget.AppCompatImage
           (float) (angleToCorner - halfCornerArcSweepAngle),
           2 * halfCornerArcSweepAngle);
       }
+
+      Matrix matrix = new Matrix();
+      mMaskPath.computeBounds(tempCornerArcBounds, true);
+      matrix.postRotate(30, tempCornerArcBounds.centerX(), tempCornerArcBounds.centerY());
+      mMaskPath.transform(matrix);
       mMaskPath.close();
 
     }
