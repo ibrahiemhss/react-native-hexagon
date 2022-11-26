@@ -252,7 +252,7 @@ public class EffectiveShapeView extends androidx.appcompat.widget.AppCompatImage
 
 
     public void drawShape(int cornerRadius) {
-      createMask(mWidth,mHeight,cornerRadius*2);
+      createMask(mWidth,mHeight,cornerRadius*3);
       invalidate();
     }
 

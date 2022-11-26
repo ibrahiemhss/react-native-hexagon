@@ -66,13 +66,13 @@ class HexagonView : UIView {
     @objc var width: Int = 0 {
        
          didSet {
-             var mWidth=width+12
+             var mWidth=width+8
              rootController.setSize(_size:mWidth)
          }
        }
        @objc var height: Int = 0 {
          didSet {
-             var mHeight=height+12
+             var mHeight=height+8
              rootController.setSize(_size:mHeight)
 
          }
