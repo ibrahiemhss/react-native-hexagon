@@ -62,18 +62,22 @@ class HexagonView : UIView {
           rootController.setCornerRadius(_cornerRadius: cornerRadius)
       }
     }
-    func setSize( _size :Int) {
-        print( "============= setSize = \(_size)")
-        rect = CGRectMake(0, 0, CGFloat(_size), CGFloat(_size))
-        size=_size
-      }
-    @objc var size: Int = 0 {
-      didSet {
-          print( "============= cornerRadius = \(cornerRadius)")
+   
+    @objc var width: Int = 0 {
+       
+         didSet {
+             var mWidth=width+12
+             rootController.setSize(_size:mWidth)
+         }
+       }
+       @objc var height: Int = 0 {
+         didSet {
+             var mHeight=height+12
+             rootController.setSize(_size:mHeight)
 
-          rootController.setSize(_size:size)
-      }
-    }
+         }
+       }
+
 
 }
 class ViewController: UIViewController {
@@ -85,17 +89,21 @@ class ViewController: UIViewController {
     var cornerRadius:Int = 0
     override func viewDidLoad() {
     super.viewDidLoad()
-        //addImageView()
+        addImageView()
      }
     
     func addImageView(name:String = "default"){
-        //view.setupHexagonView()
-        let image = UIImage(named: name)
-        imageView.image = image
-        imageView.frame = CGRect(x: 0, y: 0, width: size, height: size)
-        view.addSubview(imageView)
-        setupHexagonImageView(imageView: imageView,cornerRadius:cornerRadius,lineWidth:borderWidth,borderColor:borderColor)
-    }
+       
+        if(size > 0 && borderColor != "" && borderWidth > 0 && cornerRadius > 0){
+            let image = UIImage(named: name)
+            imageView.image = image
+            imageView.frame = CGRect(x: 0, y: 0, width: size, height: size)
+            view.addSubview(imageView)
+            setupHexagonImageView(imageView: imageView,cornerRadius:cornerRadius,lineWidth:borderWidth,borderColor:borderColor)
+        }
+        
+        }
+    
 
     func setData( url :String){
         imageView.load(url: URL(string: url)!)
@@ -107,22 +115,25 @@ class ViewController: UIViewController {
 
        borderColor=_borderColor
         addImageView()
+    
       }
     func setSize( _size :Int) {
         print( "============= setSize = \(_size)")
         //imageView.frame = CGRect(x: 0, y: 0, width: _size, height: _size)
         size=_size
+        addImageView()
       }
     func  setBorderWidth( _borderWidth :Int) {
         print(" ============= setBorderWidth \(_borderWidth)")
         borderWidth=_borderWidth
+        addImageView()
       }
       
     func setCornerRadius( _cornerRadius :Int) {
         cornerRadius=_cornerRadius
+        addImageView()
         print( "============= setBorderWidth = \(_cornerRadius)")
        
-        
     }
       
     func hexStringToUIColor(hexColor: String) -> UIColor {
@@ -229,5 +240,4 @@ extension UIViewController {
         viewController.didMove(toParent: self)
     }
 }
-
 

@@ -2,7 +2,6 @@ import {
   requireNativeComponent,
   UIManager,
   Platform,
-  ViewStyle,
 } from 'react-native';
 
 const LINKING_ERROR =
@@ -16,7 +15,8 @@ type HexagonProps = {
   borderColor: string;
   borderWidth: number;
   cornerRadius: number;
-  style: ViewStyle;
+  width: number;
+  height: number;
 };
 
 const ComponentName = 'HexagonView';

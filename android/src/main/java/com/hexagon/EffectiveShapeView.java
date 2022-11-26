@@ -1,19 +1,3 @@
-/*
- * Copyright 2016 - 2017 tangxiaolv
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.hexagon;
 
 import static java.lang.Math.cos;
@@ -78,9 +62,10 @@ public class EffectiveShapeView extends androidx.appcompat.widget.AppCompatImage
 
     private Drawable mDecorationsView;
 
-    private Paint mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint mShaderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Path mMaskPath = new Path();
+    private final Paint mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mShaderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Path mMaskPath = new Path();
+
     public EffectiveShapeView(Context context) {
         this(context, null);
     }
@@ -93,7 +78,6 @@ public class EffectiveShapeView extends androidx.appcompat.widget.AppCompatImage
         super(context, attrs, defStyleAttr);
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EffectiveShapeView);
-           // mShapeType = a.getInt(R.styleable.EffectiveShapeView_shape, mShapeType);
             mDirection = a.getInt(R.styleable.EffectiveShapeView_decorations_direction, mDirection);
             mPolygonSides = a.getInt(R.styleable.EffectiveShapeView_sides, mPolygonSides);
             mRx = a.getFloat(R.styleable.EffectiveShapeView_radius_x, mRx);
@@ -101,7 +85,6 @@ public class EffectiveShapeView extends androidx.appcompat.widget.AppCompatImage
             mDecorationsView = a.getDrawable(R.styleable.EffectiveShapeView_decorations_src);
             a.recycle();
         }
-
         mShaderPaint.setFilterBitmap(false);
     }
 
@@ -269,7 +252,7 @@ public class EffectiveShapeView extends androidx.appcompat.widget.AppCompatImage
 
 
     public void drawShape(int cornerRadius) {
-      createMask(mWidth,mHeight,cornerRadius);
+      createMask(mWidth,mHeight,cornerRadius*2);
       invalidate();
     }
 
@@ -361,6 +344,4 @@ public class EffectiveShapeView extends androidx.appcompat.widget.AppCompatImage
         }
         return bitmap;
     }
-
-
 }

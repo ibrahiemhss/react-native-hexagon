@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.ImageView;
 
 
 import androidx.annotation.NonNull;
@@ -20,9 +21,8 @@ public class HexagonViewManager extends SimpleViewManager<EffectiveShapeView> {
   public static final String REACT_CLASS = "HexagonView";
   private ImgStartListener imgStartListener;
   private  int cornerRadius=0;
-  private  int size=0;
   private String borderColor;
- private int borderWidth=0;
+  private int borderWidth=0;
   private interface ImgStartListener {
     void startLoading(String imgUrl);
   }
@@ -71,6 +71,12 @@ public class HexagonViewManager extends SimpleViewManager<EffectiveShapeView> {
         reactImageView.setBorderWidth(borderWidth);
         reactImageView.setBorderColor(Color.parseColor(borderColor));
         reactImageView.drawShape(cornerRadius);
+        if(reactImageView.getLayoutParams() != null) {
+          reactImageView.getLayoutParams().height = 150;
+          reactImageView.getLayoutParams().width = 150;
+          reactImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+          reactImageView.requestLayout();
+        }
       }
     });
   }
@@ -93,10 +99,7 @@ public class HexagonViewManager extends SimpleViewManager<EffectiveShapeView> {
     imgStartListener.startLoading(uri);
   }
 
-  @ReactProp(name = "size")
-  public void setSize(EffectiveShapeView view, int _size) {
-    size=_size;
-  }
+
   @ReactProp(name = "cornerRadius")
   public void setCornerRadius(EffectiveShapeView view, int _cornerRadius) {
     cornerRadius=_cornerRadius;
@@ -115,5 +118,4 @@ public class HexagonViewManager extends SimpleViewManager<EffectiveShapeView> {
   public void setBorderColor(EffectiveShapeView view, String _borderColor) {
     borderColor=_borderColor;
   }
-
 }
