@@ -31,7 +31,7 @@
     "RNHexagonImage.podspec"
   ],
   "scripts": {
-    "build": "dv-scripts build && cp src/index.js.flow src/index.js.flow && cp src/index.js.flow src/index.cjs.js.flow",
+    "build": "cp src/index.js.flow src/index.cjs.js.flow",
     "lint": "dv-scripts lint",
     "release": "dv-scripts release",
     "test": "dv-scripts test"
