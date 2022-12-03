@@ -165,7 +165,7 @@ class ViewController: UIViewController {
 
        let border = CAShapeLayer()
         border.path = path.cgPath
-       border.lineWidth = _lineWidth
+        border.lineWidth = _lineWidth
        border.strokeColor = hexStringToUIColor(hexColor: borderColor).cgColor
        border.fillColor = UIColor.clear.cgColor
        imageView.layer.addSublayer(border)
