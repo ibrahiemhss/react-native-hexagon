@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "test",
   "types": "lib/typescript/index.d.ts",
-  "source": "src/index",
+  "source": "dist/index",
   "keywords": [
     "react-native",
     "ios",
