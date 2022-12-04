@@ -77,9 +77,53 @@
     [color set];
     [newImage drawInRect: CGRectMake(0, 0, image.size.width, newImage.size.height)];
     newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+   /* CGRect rectangle = CGRectMake(0, 0, image.size.width, newImage.size.height);
+    
+    CGFloat lineWidth=4;
+    NSInteger sides=6;
+    CGFloat cornerRadius=30;
+    
+    CGMutablePathRef pathRef  = CGPathCreateMutable();
+
+    CGFloat theta       = 2.0 * M_PI / 6;                           // how much to turn at every corner
+    //CGFloat offset      = cornerRadius * tanf(theta / 2.0);             // offset from which to start rounding corners
+    CGFloat width = MIN(rectangle.size.width, rectangle.size.height);   // width of the square
+
+    // Calculate Center
+    CGPoint center = CGPointMake(rectangle.origin.x + width / 2.0, rectangle.origin.y + width / 2.0);
+    CGFloat radius = (width - lineWidth + cornerRadius - (cos(theta) * cornerRadius)) / 2.0;
+
+    // Start drawing at a point, which by default is at the right hand edge
+    // but can be offset
+    CGFloat angle = M_PI / 2;
+
+    CGPoint corner = CGPointMake(center.x + (radius - cornerRadius) * cos(angle), center.y + (radius - cornerRadius) * sin(angle));
+    CGPathMoveToPoint(pathRef, nil, corner.x + cornerRadius * cos(angle + theta), corner.y + cornerRadius * sin(angle + theta));
+
+    // draw the sides and rounded corners of the polygon
+    for (NSInteger side = 0; side < sides; side++) {
+
+        angle += theta;
+
+        CGPoint corner = CGPointMake(center.x + (radius - cornerRadius) * cos(angle), center.y + (radius - cornerRadius) * sin(angle));
+        CGPoint tip = CGPointMake(center.x + radius * cos(angle), center.y + radius * sin(angle));
+        CGPoint start = CGPointMake(corner.x + cornerRadius * cos(angle - theta), corner.y + cornerRadius * sin(angle - theta));
+        CGPoint end = CGPointMake(corner.x + cornerRadius * cos(angle + theta), corner.y + cornerRadius * sin(angle + theta));
+
+        //[path addLineToPoint:start];
+        CGPathAddLineToPoint(pathRef, nil, start.x, start.y);
+
+        //[path addQuadCurveToPoint:end controlPoint:tip];
+        CGPathAddQuadCurveToPoint(pathRef, nil, tip.x, tip.y, end.x, end.y);
+    }*/
+
+ 
     UIGraphicsEndImageContext();
     return newImage;
 }
+
+
 
 - (void) setImage: (UIImage*)image {
     if (self.imageColor != nil) {
