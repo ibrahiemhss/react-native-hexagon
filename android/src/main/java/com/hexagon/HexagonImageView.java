@@ -91,7 +91,7 @@ public class HexagonImageView extends AppCompatImageView {
         this.invalidate();
     }
     public void setCornerRadius(int cornerRadius) {
-        mCornerRadius=cornerRadius;
+        mCornerRadius=cornerRadius*2;
         PathEffect pathEffect = new CornerPathEffect(cornerRadius);
         paintBorder.setPathEffect(pathEffect);
         paint.setPathEffect(pathEffect);
@@ -104,32 +104,36 @@ public class HexagonImageView extends AppCompatImageView {
         this.invalidate();
     }
 
-    private void calculatePath() {
+  public void calculatePath() {
+    float halfRadius = radius / 2f;
+    float triangleHeight = (float) (Math.sqrt(3.0) * halfRadius);
+    float centerX = getMeasuredWidth() / 2f;
+    float centerY = getMeasuredHeight() / 2f;
 
-        float centerX = viewWidth/2;
-        float centerY = viewHeight/2;
-
-        hexagonBorderPath.moveTo(centerX, centerY - radius);
-        hexagonBorderPath.lineTo((float) (centerX + Math.sqrt(3f)*radius/2), centerY - radius/2);
-        hexagonBorderPath.lineTo((float) (centerX + Math.sqrt(3f)*radius/2), centerY + radius/2);
-        hexagonBorderPath.lineTo(centerX, centerY + radius);
-        hexagonBorderPath.lineTo((float) (centerX - Math.sqrt(3f)*radius/2), centerY + radius/2);
-        hexagonBorderPath.lineTo((float) (centerX - Math.sqrt(3f)*radius/2), centerY - radius/2);
-        hexagonBorderPath.close();
+    this.hexagonPath.reset();
+    this.hexagonPath.moveTo(centerX - radius, centerY);
+    this.hexagonPath.lineTo(centerX - halfRadius, centerY - triangleHeight);
+    this.hexagonPath.lineTo(centerX + halfRadius, centerY - triangleHeight);
+    this.hexagonPath.lineTo(centerX + radius, centerY);
+    this.hexagonPath.lineTo(centerX + halfRadius, centerY + triangleHeight);
+    this.hexagonPath.lineTo(centerX - halfRadius, centerY + triangleHeight);
+    this.hexagonPath.close();
 
 
-        float radiusBorder = radius - mBorderWidth;
+    float radiusBorder = radius + (float) mBorderWidth;
+    float halfRadiusBorder = radiusBorder / 2f;
+    float triangleBorderHeight = (float) (Math.sqrt(3.0) * halfRadiusBorder);
 
-
-        hexagonPath.moveTo(centerX, centerY - radiusBorder);
-        hexagonPath.lineTo((float) (centerX + Math.sqrt(3f)*radiusBorder/2), centerY - radiusBorder/2);
-        hexagonPath.lineTo((float) (centerX + Math.sqrt(3f)*radiusBorder/2), centerY + radiusBorder/2);
-        hexagonPath.lineTo(centerX, centerY + radiusBorder);
-        hexagonPath.lineTo((float) (centerX - Math.sqrt(3f)*radiusBorder/2), centerY + radiusBorder/2);
-        hexagonPath.lineTo((float) (centerX - Math.sqrt(3f)*radiusBorder/2), centerY - radiusBorder/2);
-        hexagonPath.close();
-        invalidate();
-    }
+    this.hexagonBorderPath.reset();
+    this.hexagonBorderPath.moveTo(centerX - radiusBorder, centerY);
+    this.hexagonBorderPath.lineTo(centerX - halfRadiusBorder, centerY - triangleBorderHeight);
+    this.hexagonBorderPath.lineTo(centerX + halfRadiusBorder, centerY - triangleBorderHeight);
+    this.hexagonBorderPath.lineTo(centerX + radiusBorder, centerY);
+    this.hexagonBorderPath.lineTo(centerX + halfRadiusBorder, centerY + triangleBorderHeight);
+    this.hexagonBorderPath.lineTo(centerX - halfRadiusBorder, centerY + triangleBorderHeight);
+    this.hexagonBorderPath.close();
+    invalidate();
+  }
 
 
     private void loadBitmap()  {
@@ -150,6 +154,13 @@ public class HexagonImageView extends AppCompatImageView {
 
         // init shader
         if (image != null) {
+          Matrix mMatrix = new Matrix();
+          RectF bounds = new RectF();
+          hexagonBorderPath.computeBounds(bounds, true);
+          hexagonPath.computeBounds(bounds, true);
+          mMatrix.postRotate(30, bounds.centerX(), bounds.centerY());
+          hexagonBorderPath.transform(mMatrix);
+          hexagonPath.transform(mMatrix);
 
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             shader = new BitmapShader(Bitmap.createScaledBitmap(image, canvas.getWidth(), canvas.getHeight(), false), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
